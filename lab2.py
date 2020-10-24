@@ -79,10 +79,19 @@ def generate_sentences_from_txt(file):
 
 
 def generate_tokens_from_txt(file):
+    import string
+    r = re.compile(r'[\s{}]+'.format(re.escape(string.punctuation)))
     for row in open(file, "r", encoding='utf-8'):
-        for word in row:
-            for letter in word.split():
-                yield letter
+        for word in row.split(" "):
+            if r.split(word)[0]:
+                yield r.split(word)[0]
+            for special_characer in string.punctuation:
+                if special_characer in word:
+                    yield special_characer
+                    break
+
+        # for letter in row:
+        #     yield letter
 
 
 def generate_sentences_from_conll(file):
@@ -102,11 +111,13 @@ def generate_sentences_from_conll(file):
 
 def generate_tokens_from_conll(file):
     for row in open(file, "r", encoding='utf-8'):
-        word = list(re.findall(r'"(.*?)"', row)[0])
-        if " " in word:
-            word.remove(" ")
-        for letter in word:
-            yield letter
+        word = re.findall(r'"(.*?)"', row)[0]
+        yield word
+        # word = list(re.findall(r'"(.*?)"', row)[0])
+        # if " " in word:
+        #     word.remove(" ")
+        # for letter in word:
+        #     yield letter
 
 
 
@@ -127,9 +138,9 @@ graph.bfs('A')
 print()
 graph.dfs('A')
 # t = generate_sentences_from_txt('nkjp.txt')
-# tt = generate_tokens_from_txt('nkjp.txt')
-c = generate_sentences_from_conll('nkjp.conll')
+tt = generate_tokens_from_txt('nkjp.txt')
+# c = generate_sentences_from_conll('nkjp.conll')
 # cc = generate_tokens_from_conll('nkjp.conll')
 
-for line in c:
+for line in tt:
     print(line)
