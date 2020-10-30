@@ -10,7 +10,7 @@ class Graph:
 
     def delete_vertex(self, vertex):
         if vertex in self.vertices:
-            del self.vertices[vertex]
+            del self.vertices[vertex]   # a krawędzie do tego wierzchołka?
 
     def add_edge(self, vertex, edge):
         if vertex in self.vertices and edge in self.vertices:
@@ -66,7 +66,7 @@ class Graph:
 
 def generate_sentences_from_txt(file):
     sentence = [" "]
-    for row in open(file, "r", encoding='utf-8'):
+    for row in open(file, "r", encoding='utf-8'):   # trzeba zamknąć plik
         for letter in row:
             if letter == "\n":
                 sentence.append(" ")
@@ -85,7 +85,7 @@ def generate_tokens_from_txt(file):
         for word in row.split(" "):
             if r.split(word)[0]:
                 yield r.split(word)[0]
-            for special_characer in string.punctuation:
+            for special_characer in string.punctuation: # co to właściwie ma robić?
                 if special_characer in word:
                     yield special_characer
                     break
