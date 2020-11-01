@@ -40,6 +40,11 @@ class Polynomial:
         return np.polyval(self.coefficients, point)
 
 
+
+# Odpowiedzi na pytania:
+# 1. Można przechowywać wspólczynniki w defaultdict: klucz jako stopien wspolczynnika a wartosc to co stoi przy wspolczynniku, jednak szybszym i optymalniejszym sposobem
+# bedzie po prostu skorzystanie z biblioteki numpy.
+# 2. Ten akurat wielomian działa dla liczb rzeczywistych poniewaz okreslam dtype=float, mozna okreslic dtype=complex wtedy wielomian zadziala w dziedzinie liczb zespolonych
 ##################################################################################################################################################################
 class Person:
     def __init__(self, name, surname):
@@ -52,10 +57,12 @@ class Student(Person):
         self.email = email
         self.index_nb = index_nb
         self.grades = dict()
+        self.inbox = dict()
         super().__init__(name, surname)
 
-    def send_email(self, message):
-        return message
+    def send_email(self, message, to_whom):
+        self.inbox[to_whom] = message
+        return self.inbox
 
     def add_grade(self, subject, grade):
         self.grades[subject] = grade
@@ -69,10 +76,12 @@ class Worker(Person):
     def __init__(self, name, surname, email, room_nb):
         self.room_nb = room_nb
         self.email = email
+        self.inbox = dict()
         super().__init__(name, surname)
 
-    def send_email(self, message):
-        return message
+    def send_email(self, message, to_whom):
+        self.inbox[to_whom] = message
+        return self.inbox
 
     def __str__(self):
         return "Dane pracownika: {} {}, {}, nr pokoju: {}".format(self.name, self.surname, self.email, self.room_nb)
@@ -113,10 +122,9 @@ class DidacticWorker(Worker):
 #### Polynomial tests ####
 f = Polynomial([1, 2, 3])
 g = Polynomial([2, 1, 3])
-c = Polynomial(0)
-
+# c = Polynomial(0)
 print(f.create_polynomial())
-print(c.create_polynomial())
+# print(c.create_polynomial())
 print(f.calculate_value(2))
 print(f.create_polynomial() + g.create_polynomial())
 print(f.create_polynomial() - g.create_polynomial())
@@ -126,11 +134,11 @@ print(f.create_polynomial() * g.create_polynomial())
 
 # student = Student("Karolina", "Maruszak", "karolina@", 1145)
 # print(student.add_grade("Analiza", 3))
-# print(student.send_email("To jest email"))
+# print(student.send_email("Dzień dobry", "Do dziekana"))
 # print(student)
 #
 # worker = Worker("Kasia", "Kowalska", "kasia@", 34)
-# print(worker.send_email("Wiadomosc"))
+# print(worker.send_email("Panie Kowalski, Pana kolokwium zostało ocenione", "Do Kowalskiego"))
 # print(worker)
 #
 # science_worker = ScienceWorker("Janusz", "Heheszek", "januszek@", 15)
@@ -141,3 +149,5 @@ print(f.create_polynomial() * g.create_polynomial())
 # print(didactic_worker)
 # print(didactic_worker.subjects_list)
 # print(didactic_worker.add_subjects("Python"))
+
+
