@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict # można wymienić kilka po przecinku
 from collections import OrderedDict
 from collections import Counter
 
@@ -33,15 +33,15 @@ def count_trigrams(path):
     return _count_n_grams(path, 3, 20)
 
 
-def _count_n_grams(path, n, size):
-    words = list(generate_words(path))
+def _count_n_grams(path, n, size):  # size to raczej parametr dla wypisywania niż zliczania
+    words = list(generate_words(path))  # czy to trzeba wczytywać całe do pamięci?
     ngrams = list(zip(*[words[i:] for i in range(n)]))
 
     ngrams = Counter(ngrams)
     ngrams = OrderedDict(sorted(ngrams.items(), key=lambda item: item[1], reverse=True))
 
-    for i in list(ngrams)[:20]:
-        yield i, ngrams[i]
+    for i in list(ngrams)[:20]: # dlaczego 20?
+        yield i, ngrams[i]  # polecam nazwę key, jeśli iterujemy po słowniku
     ith_element = ngrams[list(ngrams)[size - 1]]
 
     for i in list(ngrams)[size:]:

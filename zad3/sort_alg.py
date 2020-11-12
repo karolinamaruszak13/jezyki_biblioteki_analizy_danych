@@ -13,7 +13,7 @@ def insertion_sort(array):
 
 def selection_sort(array):
     for i in range(len(array)):
-        min_el = i
+        min_el = i  # właściwie min_el_index
         for j in range(i + 1, len(array)):
             if array[j] < array[min_el]:
                 min_el = j
