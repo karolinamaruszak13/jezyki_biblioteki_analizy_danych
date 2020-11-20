@@ -5,7 +5,7 @@ def gcd(a: int, b: int):
 
 
 def calculate():
-    print('Input the value of a and b:')
+    print('Input the value of a and b:')    # z wczytywania można śmiało zrobić drugą funkcję
     isNumber = False
     while not isNumber:
         try:

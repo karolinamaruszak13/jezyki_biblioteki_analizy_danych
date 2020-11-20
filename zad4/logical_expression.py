@@ -1,11 +1,11 @@
 import string
 
 
-class FakeDFA:
+class FakeDFA:  # czemu fake?
     def __init__(self):
         self.counter = 0
-        self.PUNCTUATIONS = string.ascii_lowercase + "~)|&01("
-        self.fake_dfa = {0: {'~': 0, '(': self._add_parenthesis_counter, '0': 1, '1': 1, ')': 2, '|': 2, '&': 2},
+        self.PUNCTUATIONS = string.ascii_lowercase + "~)|&01("  # myląca nazwa
+        self.fake_dfa = {0: {'~': 0, '(': self._add_parenthesis_counter, '0': 1, '1': 1, ')': 2, '|': 2, '&': 2},   # po co jest stan 2.? Nie lepiej od razu tu wpisać None?
                          1: {')': self._sub_parenthesis_counter, '|': 0, '&': 0},
                          2: {}}
         self._fill_state_0()
@@ -22,7 +22,7 @@ class FakeDFA:
 
     def _fill_state_1(self):
         punctuations = self.PUNCTUATIONS.replace(")|&", "")
-        for letter in punctuations:
+        for letter in punctuations: # myląca nazwa - to nie są litery
             self.fake_dfa[1][letter] = None
 
     def _fill_state_2(self):
@@ -49,9 +49,9 @@ class FakeDFA:
         return True, input
 
     @staticmethod
-    def accepts(input):
+    def accepts(input): # odradzam przesłanianie nazw wbudowanych
         fake_DFA_object = FakeDFA()
-        flag, input = fake_DFA_object._parser(input)
+        flag, input = fake_DFA_object._parser(input)    # flag to mało mówiąca nazwa
         if flag:
             state = fake_DFA_object._initial_state
             for c in input:
@@ -60,7 +60,7 @@ class FakeDFA:
                     state = state()
                 if state is None:
                     return False
-            return state in fake_DFA_object._accepting_states if fake_DFA_object.counter == 0 else False
+            return state in fake_DFA_object._accepting_states if fake_DFA_object.counter == 0 else False    # sugeruję return warunek1 and warunek2
         else:
             return False
 
