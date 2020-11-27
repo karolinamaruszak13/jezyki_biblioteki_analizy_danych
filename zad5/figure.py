@@ -1,5 +1,5 @@
 class Figure:
-    def __init__(self, color, name, size=1, center=[0, 0]):
+    def __init__(self, color, name, size=1, center=[0, 0]): # lista jako wartość domyślna to słaby pomysł
         self.center = center
         self.border_color = color
         self.background_color = color
@@ -7,7 +7,8 @@ class Figure:
         self.size = size
         self.rotation = 0
         self.figure_representation = lambda name: f"{self.background_color} {name}  with id {self.name} and size equal to {self.size} " \
-                                                  f"centered on {self.center} rotated by {self.rotation}° with {self.border_color} border."
+                                                  f"centered on {self.center} rotated by {self.rotation}° with {self.border_color} border." # lepiej zdefiniować metodę, niż zapisywać lambdę
+    # coś mało tej funkcjonalności
 
 class Circle(Figure):
     def __init__(self, color, name, **kwargs):

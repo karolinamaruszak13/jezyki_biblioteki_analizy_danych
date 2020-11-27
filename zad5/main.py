@@ -8,19 +8,19 @@ class Image2D:
         self.figures = []
 
     def find_figure(self, name):
-        for figure in self.figures:
+        for figure in self.figures: # nie lepszy byłby słownik?
             if figure.name == name:
                 return figure
         raise FigureNotFoundError("Invalid name of figure")
 
 
 def get_command(commands):
-    command_input = re.split("\s{1,}", input().strip())
+    command_input = re.split("\s{1,}", input().strip()) # zwykły split na stringu zrobi to samo
     command_input = [re.compile(r"\(|\)|,").sub("", m) for m in command_input]
     if command_input[0] in commands.available_commands:
         return command_input
     else:
-        raise CommandNotFoundError("Invalid command, please enter help for more information")
+        raise CommandNotFoundError("Invalid command, please enter 'help' for more information")
 
 
 def main():
@@ -42,7 +42,7 @@ def main():
             else:
                 try:
                     command.run(*command_input[1:], image)
-                except FigureNotFoundError as e:
+                except FigureNotFoundError as e:    # except (Type1, Type2) as e
                     print(e)
                 except ColorNotFoundError as e:
                     print(e)

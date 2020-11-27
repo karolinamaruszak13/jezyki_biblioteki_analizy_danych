@@ -28,10 +28,10 @@ class Commands:
                                    command_help.name: command_help, command_quit.name: command_quit}
 
     def _add(self, figure, name, size, image):
-        size = float(size)
+        size = float(size)  # czy każda figura potrzebuje tylko jednego rozmiaru?
         if figure not in self.available_figures:
             raise FigureNotFoundError("Invalid name of figure")
-        if not bool(re.fullmatch('^[a-z]\w+$', name)):
+        if not bool(re.fullmatch('^[a-z]\w+$', name)):  # a podkreślnik?
             raise InvalidNameError('Invalid id name')
         if size <= 0:
             raise InvalidArgumentError("Size must be a positive value")
@@ -52,8 +52,8 @@ class Commands:
             figure = image.find_figure(name)
         except FigureNotFoundError as e:
             print(e)
-            return
-        figure.center[0] += float(first)
+            return  # a jakby to except przenieść dwie linijki dalej?
+        figure.center[0] += float(first)    # wszystkie figury się przemieszczają razem
         figure.center[1] += float(second)
 
     def _remove(self, name, image):
@@ -110,7 +110,7 @@ class Commands:
         for key, value in self.available_commands.items():
             print(value.usage)
 
-    def quit_f(self, *args):
+    def quit_f(self, *args):    # czemu f?
         self.quit = True
 
 
