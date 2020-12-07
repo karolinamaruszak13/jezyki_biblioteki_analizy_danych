@@ -13,7 +13,7 @@ class LoadCSV:
     def column_normalization(self, col):
         ''' Nie do konca jestem pewna czy chodzilo o zwrocenie jednej kolumny czy o podmiane kolumny w calej tablicy'''
         col -= 1
-        if 0 < col < self.csv_data.shape[1] - 1 and isinstance(col, int):
+        if 0 <= col < self.csv_data.shape[1] - 1 and isinstance(col, int):
             self.csv_data[:, col] = self.csv_data[:, col] / np.linalg.norm(self.csv_data[:, col])  # podmieniam kolumne
         else:
             raise ValueError(f"Column must be integer in range (1, {self.csv_data.shape[1] - 1})")
