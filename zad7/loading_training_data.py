@@ -21,7 +21,7 @@ class LoadCSV:
     def column_centering(self, col):
         ''' Nie do konca jestem pewna czy chodzilo o zwrocenie jednej kolumny czy o podmiane kolumny w calej tablicy'''
         col -= 1
-        if 0 < col < self.csv_data.shape[1] - 1 and isinstance(col, int):
+        if 0 <= col < self.csv_data.shape[1] - 1 and isinstance(col, int):
             mean_value = self.csv_data[:, col] - self.csv_data[:, col].mean()
             std_value = self.csv_data[:, col].std()
             self.csv_data[:, col] = np.divide(mean_value, std_value, where=std_value != 0)  # podmieniam kolumne
@@ -40,5 +40,7 @@ l = LoadCSV('sample1.csv')
 # print(l.column_normalization(2))
 # print(l.column_centering(2))
 # print(l.get_label())
-# print(l.rows_normalization())
+
+# l.rows_normalization()
+# print(l.csv_data)
 # print(l.getX())

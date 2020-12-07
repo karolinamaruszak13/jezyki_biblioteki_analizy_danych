@@ -32,13 +32,15 @@ class Perceptron:
 
     def predict(self, X, Y):
         print(f"accuracy = {sum(list(map(lambda x: int(x), self.weights @ X.T + self.bias > 0)) == Y)/Y.shape[0]}")
-        return list(map(lambda x: int(x), self.weights @ X.T + self.bias > 0)) == Y
+        # return list(map(lambda x: int(x), self.weights @ X.T + self.bias > 0)) == Y
 
 
 l = LoadCSV('sample1.csv')
+for i in range(l.getX().shape[1]):
+    l.column_centering(i+1)
+# l.rows_normalization()
 p = Perceptron(l)
-p.train()
-# p.predict(p.x_test)
+p.train(max_iter=100)
 # print(p.x_test)
-p.predict(np.array([[7,21,21,-9,56,-8,17,44]]), np.array([0]))
+# p.predict(np.array([[7,21,21,-9,56,-8,17,44]]), np.array([0]))
 p.predict(p.x_test, p.y_test)
