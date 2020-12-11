@@ -8,11 +8,11 @@ class LoadCSV:
             self.csv_data = np.genfromtxt(csv_file, delimiter=';')
 
     def get_label(self):
-        return self.csv_data[:, ~0]
+        return self.csv_data[:, ~0] # czy to ~0 jest dla Pani czytelne? Nie ma możliwości wskazania, która kolumna zawiera etykietę
 
     def column_normalization(self, col):
         ''' Nie do konca jestem pewna czy chodzilo o zwrocenie jednej kolumny czy o podmiane kolumny w calej tablicy'''
-        col -= 1
+        col -= 1    # czemu?
         if 0 <= col < self.csv_data.shape[1] - 1 and isinstance(col, int):
             self.csv_data[:, col] = self.csv_data[:, col] / np.linalg.norm(self.csv_data[:, col])  # podmieniam kolumne
         else:
@@ -30,10 +30,10 @@ class LoadCSV:
 
     def rows_normalization(self):
         ''' Nie do konca jestem pewna czy chodzilo o zwrocenie znormalizowanej tablicy czy o jej podmiane '''
-        self.csv_data = self.csv_data / np.linalg.norm(self.csv_data, axis=0)
+        self.csv_data = self.csv_data / np.linalg.norm(self.csv_data, axis=0)   # czy to przypadkiem nie normalizuje też etykiety?
 
     def getX(self):
-        return self.csv_data[:, :self.csv_data.shape[1] - 1]
+        return self.csv_data[:, :self.csv_data.shape[1] - 1]    # lepiej na trwałe oddzielić etykietę od reszty
 
 
 l = LoadCSV('sample1.csv')

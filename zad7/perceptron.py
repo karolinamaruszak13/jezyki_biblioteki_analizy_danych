@@ -9,10 +9,10 @@ class Perceptron:
         self.y -= 0.5
         self.y = self.y * 2
         self.x_train, self.x_test = data.getX()[:int(data.getX().shape[0] * 0.6)], \
-                                    data.getX()[int(data.getX().shape[0] * 0.6):]
+                                    data.getX()[int(data.getX().shape[0] * 0.6):]   # podział 60:40?
         self.y_train, self.y_test = data.get_label()[:int(data.get_label().shape[0] * 0.6)], \
                                     data.get_label()[int(data.get_label().shape[0] * 0.6):]
-        self.y_test += 0.5
+        self.y_test += 0.5  # o co tu chodzi?
         self.weights = np.zeros(data.getX().shape[1])
         self.bias = 0
 
@@ -30,7 +30,7 @@ class Perceptron:
             print(
                 f"epoch={epoch + 1}, loss={loss / self.x_train.shape[0]}, accuracy={1 - error / self.x_train.shape[0]}")
 
-    def predict(self, X, Y):
+    def predict(self, X, Y):    # to nie jest predict tylko test
         print(f"accuracy = {sum(list(map(lambda x: int(x), self.weights @ X.T + self.bias > 0)) == Y)/Y.shape[0]}")
         # return list(map(lambda x: int(x), self.weights @ X.T + self.bias > 0)) == Y
 
