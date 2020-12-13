@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class DataCSV:
@@ -20,9 +21,11 @@ class DataCSV:
     def ac_power_plot(self, SOURCE_KEY, startWeek, endWeek):
         self._convert_data_time()
         df = self._drop_NaN_rows()
-        df.loc[(df['DATE_TIME'] >= startWeek) & (df['DATE_TIME'] <= endWeek)].loc[df['SOURCE_KEY'] == SOURCE_KEY] \
-            .plot(x="DATE_TIME", y= "AC_POWER", xlabel="DATE_TIME", ylabel="AC_POWER", label=f'{SOURCE_KEY}')
-        df.loc[(df['DATE_TIME'] >= startWeek) & (df['DATE_TIME'] <= endWeek)].groupby(['DATE_TIME']).mean()['AC_POWER']\
+        df.loc[(df['DATE_TIME'] >= startWeek) & (df['DATE_TIME'] <= endWeek)] \
+            .loc[df['SOURCE_KEY'] == SOURCE_KEY] \
+            .plot(x="DATE_TIME", y="AC_POWER", xlabel="DATE_TIME", ylabel="AC_POWER", label=f'{SOURCE_KEY}')
+        df.loc[(df['DATE_TIME'] >= startWeek) & (df['DATE_TIME'] <= endWeek)] \
+            .groupby(['DATE_TIME']).mean()['AC_POWER'] \
             .plot(xlabel="DATE_TIME", ylabel="AC_POWER", label='General_AC_POWER_MEAN')
 
         plt.legend()
@@ -40,11 +43,25 @@ class DataCSV:
 
     def count_generators(self):
         df = self.find_ac_power_below_avg().set_index(['SOURCE_KEY'])
-        return df['AC_POWER'].groupby(['SOURCE_KEY']).count().sort_values()
-#najczesciej dotyczy to generatora Quc1TzYxW2pYoWX
+        return df['AC_POWER'].groupby(['SOURCE_KEY']).count()
+
+    # najczesciej dotyczy to generatora Quc1TzYxW2pYoWX, widac to na plocie nizej
+
+    def plot_generators(self):
+        df = self.count_generators()
+        x = np.arange(len(df))
+        source_keys = pd.DataFrame(df.groupby(['SOURCE_KEY'])).values[:, 0]
+
+        plt.rc('xtick', labelsize=6.5)
+        df.plot(kind='bar', alpha=1, rot=80, xlabel="SOURCE_KEY", ylabel="AMOUNT")
+        plt.xticks(x, source_keys)
+        plt.suptitle("Cases when the generator power was below 80% of the average")
+        plt.show()
+
 
 d = DataCSV("Plant_1_Generation_Data.csv", "Plant_2_Generation_Data.csv")
-# print(d.drop_NaN_rows())
+# print(d._drop_NaN_rows())
 d.ac_power_plot('1BY6WEcLGh8j5v7', '2020-05-15 00:00:00', '2020-05-23 00:00:00')
 print(d.find_ac_power_below_avg())
 print(d.count_generators())
+d.plot_generators()
