@@ -11,7 +11,7 @@ class DataCSV:
     def _drop_NaN_rows(self):
         rows_with_NaN = self.df.index[self.df.isnull().any(axis=1)]
         # print(rows_with_NaN.shape)
-        self.df.drop(rows_with_NaN, 0, inplace=True)
+        self.df.drop(rows_with_NaN, 0, inplace=True) # dropna
         return self.df
 
     def _convert_data_time(self):
@@ -20,7 +20,7 @@ class DataCSV:
 
     def ac_power_plot(self, SOURCE_KEY, startWeek, endWeek):
         self._convert_data_time()
-        df = self._drop_NaN_rows()
+        df = self._drop_NaN_rows()                                          # dla zasady przedział z jednej strony powinien być otwarty
         df.loc[(df['DATE_TIME'] >= startWeek) & (df['DATE_TIME'] <= endWeek)] \
             .loc[df['SOURCE_KEY'] == SOURCE_KEY] \
             .plot(x="DATE_TIME", y="AC_POWER", xlabel="DATE_TIME", ylabel="AC_POWER", label=f'{SOURCE_KEY}')
