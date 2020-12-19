@@ -21,6 +21,7 @@ class DataCSV:
     def ac_power_plot(self, SOURCE_KEY, startWeek, endWeek):
         self._convert_data_time()
         df = self._drop_NaN_rows()
+
         df.loc[(df['DATE_TIME'] >= startWeek) & (df['DATE_TIME'] <= endWeek)] \
             .loc[df['SOURCE_KEY'] == SOURCE_KEY] \
             .plot(x="DATE_TIME", y="AC_POWER", xlabel="DATE_TIME", ylabel="AC_POWER", label=f'{SOURCE_KEY}')
