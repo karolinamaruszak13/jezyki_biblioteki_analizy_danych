@@ -1,0 +1,27 @@
+{
+    "1": {
+        "title": "A Game of Thrones",
+        "author": "George R.R. Martin",
+        "publishment_year": 2011
+    },
+    "2": {
+        "title": "The Lord of the Rings",
+        "author": "J.R.R. Tolkien",
+        "publishment_year": 2005
+    },
+    "3": {
+        "title": "Harry Potter and the Chamber of Secrets",
+        "author": "J.K. Rowling",
+        "publishment_year": 2014
+    },
+    "4": {
+        "title": "The Martian",
+        "author": "Andy Weir",
+        "publishment_year": 2014
+    },
+    "5": {
+        "title": "Harry Potter and the Deathly Hallows",
+        "author": "J.K. Rowling",
+        "publishment_year": "2007"
+    }
+}
