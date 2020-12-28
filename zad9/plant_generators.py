@@ -34,7 +34,7 @@ class PlantGenerators:
         mean = self.avg_for_generators()
         daily_yield_gen = self.choose_daily_yield_gen(SOURCE_KEY)
         ratio_frame = pd.merge(daily_yield_gen, mean, on='DATE_TIME', suffixes=('_GEN', '_MEAN'))
-        ratio_frame['RATIO'] = ratio_frame.DAILY_YIELD_GEN.div(ratio_frame.DAILY_YIELD_MEAN)
+        ratio_frame['RATIO'] = ratio_frame.DAILY_YIELD_GEN.div(ratio_frame.DAILY_YIELD_MEAN)    # czemu nie zwykłe dzielenie?
 
         return ratio_frame
 
@@ -53,7 +53,7 @@ class PlantGenerators:
             .plot(xlabel="DATE_TIME", color='r', linestyle='dashed', linewidth=1, ylabel="AC_POWER",
                   label='ih0vzX44oOqAx2f')
         df.loc['zBIq5rxdHJRwDNY']['AC_POWER'][startWeek:endWeek] \
-            .plot(xlabel="DATE_TIME", color='blue', linestyle='dashed', linewidth=1, ylabel="AC_POWER",
+            .plot(xlabel="DATE_TIME", color='blue', linestyle='dashed', linewidth=1, ylabel="AC_POWER", # DRY
                   label='zBIq5rxdHJRwDNY')
         df.loc['rrq4fwE8jgrTyWY']['AC_POWER'][startWeek:endWeek] \
             .plot(xlabel="DATE_TIME", color='y', linestyle='dashed', linewidth=1, ylabel="AC_POWER",
@@ -94,7 +94,7 @@ class PlantGenerators:
     def map_element(self, element):
         if element < 0.75:
             return "<75%"
-        elif 0.85 > element >= 0.75:
+        elif 0.85 > element >= 0.75:    # DRY
             return "75-85%"
         elif 0.95 > element >= 0.85:
             return "85-95%"
