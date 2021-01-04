@@ -61,27 +61,19 @@ class Reader(Library):
                 print("Borrowed books: ")
                 print(*book, sep='\n')
 
-                keys = [tuples[0]for tuples in book]
+                keys = [tuples[0] for tuples in book]
                 values = [tuples[1] for tuples in book]
-
                 borrowedBook = dict(zip(keys, values))
-
-
                 with open('borrowed_books.json', 'w') as json_file:
                     json.dump(borrowedBook, json_file, indent=4)
-
-                del self.books[book[0][0]]
+                for tuples in book:
+                    del self.books[tuples[0]]
             with open('library_books.json', 'w') as json_file:
                 json.dump(self.books, json_file, indent=4)
-
-
         elif option == 'exit':
             sys.exit('Thank you for using the system!')
         else:
             raise OptionNotFoundError("The specified option does not exist!")
-
-
-
 
 
 class Worker(Library):
@@ -110,7 +102,6 @@ class Worker(Library):
             print(f"{id}. {self.books[id]['title']}, {self.books[id]['author']}, {self.books[id]['publishment_year']}")
 
     def check_workers_option(self, option):
-        r = Reader()
         if option == "1":
             with open('library_books.json') as json_file:
                 self.books = json.load(json_file)
@@ -127,10 +118,7 @@ class Worker(Library):
                     del borrowBook[k]
                 with open('borrowed_books.json', 'w') as json_file:
                     json.dump(borrowBook, json_file, indent=4, sort_keys=True)
-
-
                 print('The return of the books has been accepted')
-
             elif decision == 'n':
                 print('The return of the books has not been accepted')
             else:
@@ -144,6 +132,9 @@ class Worker(Library):
             title = input('Enter the title: ')
             author = input('Enter the author: ')
             year = input('Enter the publishment year: ')
+            if type(year) != int or int(year) > 2020:
+                raise PublishmentYearError("The specified publishment year is incorrect!")
+
             self.books[str(len(list(self.books.keys())) + 1)] = {"title": title, "author": author,
                                                                  "publishment_year": year}
             with open('library_books.json', 'w') as json_file:
@@ -184,26 +175,23 @@ def main():
     print('Welcome to the library system, please log in using your ID:')
     try:
         id = input()
-
-        if id in workersID:
-
-            print(f'Hello {w.workers[id]}, here is your available options:')
-            for key, value in w.worker_menu().items():
-                print(f"{key}. {value}")
-            while True:
-                try:
-                    w.check_workers_option(option=input('Please select one option: '))
-                except OptionNotFoundError as e:
-                    print(e)
-
-        elif id in readersID:
+        if id in readersID:
             print(f'Hello {r.readers[id]}, here is your available options:')
             for key, value in r.reader_menu().items():
                 print(f"{key}. {value}")
             while True:
                 try:
                     r.check_readers_option(option=input('Please select one option: '))
-                except OptionNotFoundError as e:
+                except (OptionNotFoundError, PublishmentYearError) as e:
+                    print(e)
+        elif id in workersID:
+            print(f'Hello {w.workers[id]}, here is your available options:')
+            for key, value in w.worker_menu().items():
+                print(f"{key}. {value}")
+            while True:
+                try:
+                    w.check_workers_option(option=input('Please select one option: '))
+                except (OptionNotFoundError, PublishmentYearError) as e:
                     print(e)
         else:
             raise IDNotFoundError("There is no user with the given ID!")
