@@ -36,17 +36,12 @@ class Reader(Library):
         with open('list_of_readers.json', 'w') as json_file:
             json.dump(self.readers, json_file, indent=4)
 
-    def check_readers_option(self):
-        option = input('Please select one option: ')
+    def check_readers_option(self, option):
         if option == "1":
             with open('library_books.json') as json_file:
                 self.books = json.load(json_file)
-            books = []
             wanted_book = input('Enter the title or author of the book you are looking for: ')
-            for id, value in self.books.items():
-                for key in value:
-                    if value[key] == wanted_book:
-                        books.append(self.books[id])
+            books = [self.books[id] for id, value in self.books.items() for key in value if value[key] == wanted_book]
             if not books:
                 print("Book is not found")
             else:
@@ -55,23 +50,38 @@ class Reader(Library):
         elif option == "2":
             with open('library_books.json') as json_file:
                 self.books = json.load(json_file)
-            titles = []
-            book = []
             n = int(input("Enter the number of books you want to borrow : "))
-            for i in range(0, n):
-                title = input('Enter the titles of the books you want to borrow: ')
-                titles.append(title)
-            for id, value in self.books.items():
-                for key in value:
-                    if value[key] in titles:
-                        book.append(self.books[id])
-            print("Borrowed books: ")
-            print(*book, sep='\n')
-            ### NIE WIEM CZY PO WYPOZYCZENIU MAM USUWAC KSIAZKI Z LISTY KSIAZEK
+            titles = [input('Enter the title of the book you want to borrow: ') for i in range(0, n)]
+            book = [(id, self.books[id]) for id, value in self.books.items() for key in value if value[key] in titles]
+            bookTitles = [b[1]['title'] for b in book]
+            for title in titles:
+                if title not in bookTitles:
+                    print(f"Book \"{title}\" is not found")
+            if book:
+                print("Borrowed books: ")
+                print(*book, sep='\n')
+
+                keys = [tuples[0]for tuples in book]
+                values = [tuples[1] for tuples in book]
+
+                borrowedBook = dict(zip(keys, values))
+
+
+                with open('borrowed_books.json', 'w') as json_file:
+                    json.dump(borrowedBook, json_file, indent=4)
+
+                del self.books[book[0][0]]
+            with open('library_books.json', 'w') as json_file:
+                json.dump(self.books, json_file, indent=4)
+
+
         elif option == 'exit':
             sys.exit('Thank you for using the system!')
         else:
             raise OptionNotFoundError("The specified option does not exist!")
+
+
+
 
 
 class Worker(Library):
@@ -99,18 +109,35 @@ class Worker(Library):
         for id, value in self.books.items():
             print(f"{id}. {self.books[id]['title']}, {self.books[id]['author']}, {self.books[id]['publishment_year']}")
 
-
-    def check_workers_option(self):
-        option = input('Please select one option: ')
+    def check_workers_option(self, option):
+        r = Reader()
         if option == "1":
+            with open('library_books.json') as json_file:
+                self.books = json.load(json_file)
             print('Do you want to accept books return? (y / n)')
             decision = input()
+            keys = []
             if decision == 'y':
+                with open('borrowed_books.json') as json_file:
+                    borrowBook = json.load(json_file)
+                for key, value in borrowBook.items():
+                    self.books[key] = value
+                    keys.append(key)
+                for k in keys:
+                    del borrowBook[k]
+                with open('borrowed_books.json', 'w') as json_file:
+                    json.dump(borrowBook, json_file, indent=4, sort_keys=True)
+
+
                 print('The return of the books has been accepted')
+
             elif decision == 'n':
                 print('The return of the books has not been accepted')
             else:
                 raise OptionNotFoundError("The specified option does not exist!")
+            with open('library_books.json', 'w') as json_file:
+                json.dump(self.books, json_file, indent=4, sort_keys=True)
+
         elif option == "2":
             with open('library_books.json') as json_file:
                 self.books = json.load(json_file)
@@ -120,7 +147,7 @@ class Worker(Library):
             self.books[str(len(list(self.books.keys())) + 1)] = {"title": title, "author": author,
                                                                  "publishment_year": year}
             with open('library_books.json', 'w') as json_file:
-                json.dump(self.books, json_file, indent=4)
+                json.dump(self.books, json_file, indent=4, sort_keys=True)
             print('The books has been updated:')
             self.books_output()
         elif option == "3":
@@ -129,7 +156,7 @@ class Worker(Library):
             key = input('Enter the ID of the book you want to delete: ')
             del self.books[key]
             with open('library_books.json', 'w') as json_file:
-                json.dump(self.books, json_file, indent=4)
+                json.dump(self.books, json_file, indent=4, sort_keys=True)
             print('The books has been updated:')
             self.books_output()
         elif option == "4":
@@ -139,7 +166,7 @@ class Worker(Library):
             name = input('Enter the new reader: ')
             r.readers[f"r{len(list(r.readers.keys())) + 1}"] = name
             with open('list_of_readers.json', 'w') as json_file:
-                json.dump(r.readers, json_file, indent=4)
+                json.dump(r.readers, json_file, indent=4, sort_keys=True)
             print('The catalog of readers has been updated:')
             for key, value in r.readers.items():
                 print(f"{key}. {value}")
@@ -159,12 +186,13 @@ def main():
         id = input()
 
         if id in workersID:
+
             print(f'Hello {w.workers[id]}, here is your available options:')
             for key, value in w.worker_menu().items():
                 print(f"{key}. {value}")
             while True:
                 try:
-                    w.check_workers_option()
+                    w.check_workers_option(option=input('Please select one option: '))
                 except OptionNotFoundError as e:
                     print(e)
 
@@ -174,7 +202,7 @@ def main():
                 print(f"{key}. {value}")
             while True:
                 try:
-                    r.check_readers_option()
+                    r.check_readers_option(option=input('Please select one option: '))
                 except OptionNotFoundError as e:
                     print(e)
         else:
