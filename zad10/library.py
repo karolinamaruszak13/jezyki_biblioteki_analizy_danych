@@ -6,18 +6,18 @@ from jezyki_biblioteki_analizy_danych.zad10.my_exception import *
 class Library:
     def __init__(self):
         self.menu = dict()
-        self.books = {1: {'title': 'A Game of Thrones', 'author': 'George R.R. Martin', 'publishment_year': 2011},
+        self.books = {1: {'title': 'A Game of Thrones', 'author': 'George R.R. Martin', 'publishment_year': 2011},  # przykładowe wartości w kodzie
                       2: {'title': 'The Lord of the Rings', 'author': 'J.R.R. Tolkien', 'publishment_year': 2005},
                       3: {'title': 'Harry Potter and the Chamber of Secrets', 'author': 'J.K. Rowling',
                           'publishment_year': 2014},
                       4: {'title': 'The Martian', 'author': 'Andy Weir', 'publishment_year': 2014}}
 
-    def books_catalog(self):
+    def books_catalog(self):    # niejasna nazwa
         with open('library_books.json', 'w') as json_file:
             json.dump(self.books, json_file, indent=4)
 
 
-class Reader(Library):
+class Reader(Library):  # czytelnik jest szczególnym przypadkiem biblioteki?
     def __init__(self):
         super().__init__()
         # r1,r2,r3 - identyfikatory ktorymi dany czytelnik sie loguje do systemu
@@ -29,7 +29,7 @@ class Reader(Library):
         self.menu = {1: 'Search the catalog of books',
                      2: 'Borrow a book'}
         with open('menu_for_reader.json', 'w') as json_file:
-            json.dump(self.menu, json_file, indent=4)
+            json.dump(self.menu, json_file, indent=4)   # ale po co?
         return self.menu
 
     def readers_catalog(self):
@@ -38,17 +38,17 @@ class Reader(Library):
 
     def check_readers_option(self, option):
         if option == "1":
-            with open('library_books.json') as json_file:
+            with open('library_books.json') as json_file:   # za każdym razem wczytujemy plik na nowo?
                 self.books = json.load(json_file)
             wanted_book = input('Enter the title or author of the book you are looking for: ')
-            books = [self.books[id] for id, value in self.books.items() for key in value if value[key] == wanted_book]
+            books = [self.books[id] for id, value in self.books.items() for key in value if value[key] == wanted_book]  # self.books[id] <=> value
             if not books:
                 print("Book is not found")
             else:
                 print("Books found in the system: ")
                 print(*books, sep='\n')
         elif option == "2":
-            with open('library_books.json') as json_file:
+            with open('library_books.json') as json_file:   # DRY
                 self.books = json.load(json_file)
             n = int(input("Enter the number of books you want to borrow : "))
             titles = [input('Enter the title of the book you want to borrow: ') for i in range(0, n)]
@@ -112,7 +112,7 @@ class Worker(Library):
                 with open('borrowed_books.json') as json_file:
                     borrowBook = json.load(json_file)
                 for key, value in borrowBook.items():
-                    self.books[key] = value
+                    self.books[key] = value # o co tu chodzi?
                     keys.append(key)
                 for k in keys:
                     del borrowBook[k]
@@ -144,7 +144,7 @@ class Worker(Library):
         elif option == "3":
             with open('library_books.json') as json_file:
                 self.books = json.load(json_file)
-            key = input('Enter the ID of the book you want to delete: ')
+            key = input('Enter the ID of the book you want to delete: ')    # pomieszanie logiki aplikacji z interfejsem użytkownika
             del self.books[key]
             with open('library_books.json', 'w') as json_file:
                 json.dump(self.books, json_file, indent=4, sort_keys=True)
@@ -168,7 +168,7 @@ class Worker(Library):
 
 
 def main():
-    w = Worker()
+    w = Worker()    # w jest pracownikiem... ale jakim?
     r = Reader()
     workersID = list(w.workers.keys())
     readersID = list(r.readers.keys())
